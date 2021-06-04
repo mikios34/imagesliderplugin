@@ -83,5 +83,54 @@ add_shortcode('np-shortcode', 'np_function');
 
 
 
+
+
+function np_widgets_init() {
+    register_widget('np_Widget');
+}
+ 
+add_action('widgets_init', 'np_widgets_init');
+
+	
+class np_Widget extends WP_Widget {
+ 
+    public function __construct() {
+        parent::__construct('np_Widget', 'MySlideShow', array('description' => __('MySlideShow widget', 'text_domain')));
+    }
+
+	public function form($instance) {
+		if (isset($instance['title'])) {
+			$title = $instance['title'];
+		}
+		else {
+			$title = __('Widget Slideshow', 'text_domain');
+		}
+		?>
+			<p>
+				<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
+				<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+			</p>
+		<?php
+	}
+
+
+	public function widget($args, $instance) {
+		extract($args);
+		// the title
+		$title = apply_filters('widget_title', $instance['title']);
+		echo $before_widget;
+		if (!empty($title))
+			echo $before_title . $title . $after_title;
+		echo np_function('np_widget');
+		echo $after_widget;
+	}
+
+	
+
+
+}
+
+
+
 ?>
 
